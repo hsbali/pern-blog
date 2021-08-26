@@ -1,0 +1,87 @@
+@import "_config";
+
+// ===================================Admin Navbar========================================
+#admin-content {
+  height: calc(100vh - 4rem);
+
+  & .admin-layout-sidebar {
+    position: relative;
+    height: 100%;
+  }
+
+  & .admin-layout-sidebar {
+    & #admin-sidebar {
+      background-color: $secondaryBackground;
+      color: white;
+      width: 300px;
+      position: absolute;
+      height: calc(100vh - 4rem);
+
+      @media (min-width: 992px) {
+        position: static;
+      }
+
+      & .sidebar-nav {
+        list-style: none;
+        padding: 0;
+        & .nav-item {
+          padding: 0.5rem 1rem;
+          font-weight: 600;
+
+          &.active {
+            background-color: lighten($secondaryBackground, 10%);
+          }
+
+          &:hover {
+            background-color: lighten($secondaryBackground, 10%);
+            cursor: pointer;
+          }
+        }
+        & .sidebar-drop-nav {
+          list-style: none;
+          padding-left: 1rem;
+          & a {
+            color: white;
+            text-decoration: none;
+          }
+
+          & .nav-item {
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            margin: 0.2rem 0rem;
+
+            &.active {
+              background-color: lighten($secondaryBackground, 10%);
+            }
+            &:hover {
+              background-color: lighten($secondaryBackground, 10%);
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  & .admin-layout-sidebar-hidden {
+    & #admin-sidebar {
+      display: none;
+    }
+  }
+}
+
+// ===================================Admin Navbar========================================
+#admin-navbar {
+  height: 4rem;
+  background-color: $primaryBackground;
+  & .navbar-brand {
+    font-size: 1.3rem;
+    text-decoration: none;
+    color: white;
+  }
+}
+
+#admin-main {
+  height: calc(100vh - 4rem);
+  overflow-y: auto;
+}
