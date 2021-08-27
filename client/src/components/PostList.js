@@ -2,7 +2,9 @@ import React, { Fragment, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getPosts } from "../actions/post";
+import { Link } from "react-router-dom";
+
+import { getPublishedPosts } from "../actions/post";
 
 const ShowDate = ({ create, update }) => {
   const [date, setDate] = useState(null);
@@ -19,9 +21,9 @@ const ShowDate = ({ create, update }) => {
   return <>{date}</>;
 };
 
-const PostList = ({ posts, getPosts }) => {
+const PostList = ({ posts, getPublishedPosts }) => {
   useEffect(() => {
-    getPosts(1);
+    getPublishedPosts(0, 3);
   }, []);
   return (
     <>
@@ -33,30 +35,35 @@ const PostList = ({ posts, getPosts }) => {
                 {posts.map((post, i) => {
                   return (
                     <Fragment key={i}>
-                      <div
-                        className="pointer px-5 py-3"
-                        style={{
-                          borderBottom: "1px solid grey",
-                        }}
+                      <Link
+                        to={"/post/" + post.post_id}
+                        style={{ textDecoration: "none", color: "black" }}
                       >
-                        <h1>{post.title}</h1>
-                        <div className="d-flex align-items-center">
-                          <h5 className="flex-grow-1 m-0">{post.username}</h5>
-                          <h6 className="m-0">
-                            <ShowDate
-                              create={post.create_time}
-                              update={post.update_time}
-                            />
-                          </h6>
+                        <div
+                          className="pointer px-5 py-3"
+                          style={{
+                            borderBottom: "1px solid grey",
+                          }}
+                        >
+                          <h1>{post.title}</h1>
+                          <div className="d-flex align-items-center">
+                            <h5 className="flex-grow-1 m-0">{post.username}</h5>
+                            <h6 className="m-0">
+                              <ShowDate
+                                create={post.create_time}
+                                update={post.update_time}
+                              />
+                            </h6>
+                          </div>
                         </div>
-                      </div>
+                      </Link>
                     </Fragment>
                   );
                 })}
                 <div className="text-center">
                   <button
                     className="btn btn-primary"
-                    onClick={(e) => getPosts(posts.length + 1)}
+                    onClick={(e) => getPublishedPosts(posts.length, 3)}
                   >
                     Load more
                   </button>
@@ -78,11 +85,11 @@ const PostList = ({ posts, getPosts }) => {
 
 PostList.propTypes = {
   posts: PropTypes.array.isRequired,
-  getPosts: PropTypes.func.isRequired,
+  getPublishedPosts: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   posts: state.post.posts,
 });
 
-export default connect(mapStateToProps, { getPosts })(PostList);
+export default connect(mapStateToProps, { getPublishedPosts })(PostList);

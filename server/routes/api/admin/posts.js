@@ -1,15 +1,15 @@
 const express = require("express");
-const pool = require("./../../db");
+const pool = require("./../../../db");
 
 const router = express.Router();
 
 // @route       GET /posts
-// @desc        Get All published posts
+// @desc        Get All posts
 // @access      Public
 router.get("/", async (req, res) => {
   try {
     const getPosts = await pool.query(
-      "SELECT p.post_id, p.title, p.content, p.tags, p.status, p.create_time, p.update_time, u.user_id, u.username, u.email, u.profile_id, u.user_type FROM tbl_post p JOIN tbl_user u ON p.author_id = u.user_id WHERE p.status = '2' ORDER BY update_time DESC OFFSET $1 LIMIT $2",
+      "SELECT p.post_id, p.title, p.content, p.tags, p.status, p.create_time, p.update_time, u.user_id, u.username, u.email, u.profile_id, u.user_type FROM tbl_post p JOIN tbl_user u ON p.author_id = u.user_id ORDER BY update_time DESC OFFSET $1 LIMIT $2",
       [parseInt(req.query.offset), parseInt(req.query.limit)]
     );
     const posts = getPosts.rows;
@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
 router.get("/:post_id", async (req, res) => {
   try {
     const getPost = await pool.query(
-      "SELECT p.post_id, p.title, p.content, p.tags, p.status, p.create_time, p.update_time, u.user_id, u.username, u.email, u.profile_id, u.user_type FROM tbl_post p JOIN tbl_user u ON p.author_id = u.user_id WHERE p.status = '2' AND p.post_id = $1",
+      "SELECT p.post_id, p.title, p.content, p.tags, p.status, p.create_time, p.update_time, u.user_id, u.username, u.email, u.profile_id, u.user_type FROM tbl_post p JOIN tbl_user u ON p.author_id = u.user_id WHERE p.post_id = $1",
       [parseInt(req.params.post_id)]
     );
     const post = getPost.rows[0];

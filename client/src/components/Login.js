@@ -8,7 +8,7 @@ import { login } from "./../actions/auth";
 
 import AppLayout from "./layouts/AppLayout";
 
-const Login = ({ isAuthenticated, login, isAdmin }) => {
+const Login = ({ isAuthenticated, login }) => {
   const history = useHistory();
 
   useEffect(() => {

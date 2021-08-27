@@ -31,8 +31,12 @@ app.get("/", (req, res) => {
 app.use("/api/v1/users", require("./routes/api/users"));
 app.use("/api/v1/auth", require("./routes/api/auth"));
 app.use("/api/v1/posts", require("./routes/api/posts"));
+app.use("/api/v1/comments", require("./routes/api/comments"));
+
 app.use("/api/v1/admin/users", require("./routes/api/admin/users"));
 app.use("/api/v1/admin/auth", require("./routes/api/admin/auth"));
+app.use("/api/v1/admin/posts", require("./routes/api/admin/posts"));
+app.use("/api/v1/admin/comments", require("./routes/api/admin/comments"));
 
 const PORT = process.env.PORT || 5500;
 

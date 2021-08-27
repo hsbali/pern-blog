@@ -13,11 +13,14 @@ import axios from "axios";
 import Home from "./pages/Home";
 import Login from "./components/Login";
 import Signin from "./components/Signin";
+import Post from "./pages/Post";
 
 import AdminDash from "./pages/admin/AdminDash";
 import AdminLogin from "./components/admin/AdminLogin";
 import AddPost from "./components/admin/AddPost";
-import PostList from "./components/admin/PostList";
+import EditPost from "./components/admin/EditPost";
+import PostListTable from "./components/admin/PostListTable";
+import CommentListTable from "./components/admin/CommentListTable";
 
 import { refreshAuth } from "./actions/auth";
 import { refreshAdminAuth } from "./actions/adminAuth";
@@ -59,7 +62,7 @@ const App = ({
 
   useEffect(() => {
     openSocketConnection();
-  }, [isAuth, isAdminAuth]);
+  }, []);
 
   return (
     <Router>
@@ -67,14 +70,27 @@ const App = ({
         <Route exact path="/" component={Home} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/signin" component={Signin} />
+
+        <Route exact path="/post/:postId" component={Post} />
+
         <Route exact path="/admin/login" component={AdminLogin} />
 
         <AdminProtectedRoute exact path="/admin" component={AdminDash} />
         <AdminProtectedRoute exact path="/admin/post/add" component={AddPost} />
         <AdminProtectedRoute
           exact
+          path="/admin/post/edit/:postId"
+          component={EditPost}
+        />
+        <AdminProtectedRoute
+          exact
           path="/admin/post/list"
-          component={PostList}
+          component={PostListTable}
+        />
+        <AdminProtectedRoute
+          exact
+          path="/admin/comment/list"
+          component={CommentListTable}
         />
       </Switch>
     </Router>

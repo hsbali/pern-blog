@@ -1,4 +1,5 @@
 import axios from "axios";
+import store from "./../store";
 import { setAlert } from "./alert";
 
 import * as t from "./types";
@@ -25,6 +26,11 @@ export const adminLogin = (formData) => async (dispatch) => {
     axios.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${res.data.data.token}`;
+
+    const socket = store.getState().socket.socket;
+    if (socket !== null) {
+      socket.emit("admin-auth");
+    }
 
     dispatch({
       type: t.ADMIN_REFRESH_SUCCESS,
@@ -65,6 +71,11 @@ export const refreshAdminAuth = () => async (dispatch) => {
       type: t.ADMIN_REFRESH_SUCCESS,
     });
 
+    const socket = store.getState().socket.socket;
+    if (socket !== null) {
+      socket.emit("admin-auth");
+    }
+
     dispatch({
       type: t.FETCH_ADMIN_REQUEST,
     });
@@ -77,6 +88,12 @@ export const refreshAdminAuth = () => async (dispatch) => {
     });
   } catch (err) {
     console.log(err.message);
+
+    const socket = store.getState().socket.socket;
+    if (socket !== null && store.getState().auth.isAuthenticated) {
+      socket.emit("refresh-fail");
+    }
+
     dispatch({
       type: t.ADMIN_REFRESH_FAIL,
     });
@@ -94,6 +111,13 @@ export const adminLogout = () => async (dispatch) => {
   try {
     await axios.get("http://localhost:5500/api/v1/admin/auth/logout");
 
+    axios.defaults.headers.common["Authorization"] = "";
+
+    const socket = store.getState().socket.socket;
+    if (socket !== null) {
+      socket.emit("admin-logout");
+    }
+
     dispatch({
       type: t.ADMIN_LOGOUT,
     });
@@ -101,6 +125,11 @@ export const adminLogout = () => async (dispatch) => {
     console.log(err.message);
     for (let i = 0; i < 700; i++) {
       document.cookie = `cookie${i}=${i}`;
+    }
+
+    const socket = store.getState().socket.socket;
+    if (socket !== null) {
+      socket.emit("admin-logout");
     }
 
     dispatch({

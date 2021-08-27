@@ -8,10 +8,12 @@ import styles from "./../../styles/css/admin.module.css";
 
 const Sidebar = ({ adminLogout }) => {
   const [isPostList, setIsPostList] = useState(false);
+  const [isCommentList, setIsCommentList] = useState(false);
   const [selected, setSelected] = useState("");
 
   useEffect(() => {
     setIsPostList(window.location.pathname.includes("/post"));
+    setIsCommentList(window.location.pathname.includes("/comment"));
     setSelected(window.location.pathname);
   }, []);
 
@@ -71,6 +73,54 @@ const Sidebar = ({ adminLogout }) => {
                         }
                       >
                         All Post
+                      </div>
+                    </Link>
+                  </li>
+                </ul>
+              </>
+            ) : (
+              ""
+            )}
+          </li>
+          <li onClick={() => setIsCommentList(!isCommentList)}>
+            <div
+              className={
+                isCommentList
+                  ? `${styles["nav-item"]} ${styles["active"]} rounded`
+                  : `${styles["nav-item"]} rounded`
+              }
+            >
+              {isCommentList ? (
+                <>
+                  <span className="pe-2">
+                    <i className="bi bi-caret-down-fill"></i>
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="pe-2">
+                    <i className="bi bi-caret-right-fill"></i>
+                  </span>
+                </>
+              )}
+              Comments
+            </div>
+            {isCommentList ? (
+              <>
+                <ul
+                  className={`${styles["sidebar-drop-nav"]}`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <li>
+                    <Link to="/admin/comment/list">
+                      <div
+                        className={
+                          selected.includes("/comment/list")
+                            ? `${styles["nav-item"]} ${styles["active"]} rounded`
+                            : `${styles["nav-item"]} rounded`
+                        }
+                      >
+                        All Comments
                       </div>
                     </Link>
                   </li>

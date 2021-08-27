@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import AdminNavbar from "../admin/AdminNavbar";
 import Sidebar from "../admin/Sidebar";
+import Toast from "../admin/Toast";
 import Alert from "../Alert";
 
 import styles from "./../../styles/css/admin.module.css";
@@ -40,6 +41,7 @@ const AdminLayout = ({ children }) => {
                 </div>
               </div>
             </div>
+            <Toast />
           </div>
         </div>
       </div>

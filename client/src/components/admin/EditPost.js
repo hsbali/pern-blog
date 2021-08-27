@@ -1,15 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import axios from "axios";
 
-const AddPost = ({ socket }) => {
+import { useParams, useHistory } from "react-router-dom";
+
+import { getAllTypePost } from "../../actions/post";
+
+const EditPost = ({ socket, post, getAllTypePost }) => {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
     tags: "",
     status: "1",
   });
+
+  const history = useHistory();
+  const { postId } = useParams();
+
+  useEffect(() => {
+    getAllTypePost(postId);
+  }, [postId]);
+
+  useEffect(() => {
+    if (post !== null) {
+      setFormData({
+        title: post.title,
+        content: post.content,
+        tags: post.tags,
+        status: post.status,
+      });
+    }
+  }, [post]);
 
   const { title, content, tags, status } = formData;
 
@@ -19,28 +41,40 @@ const AddPost = ({ socket }) => {
 
   const onCreatePost = (e) => {
     e.preventDefault();
+    formData.post_id = post.post_id;
 
-    socket.emit("new-post", {
+    socket.emit("edit-post", {
       post: formData,
       token: axios.defaults.headers.common["Authorization"],
     });
 
-    setFormData({
-      title: "",
-      content: "",
-      tags: "",
-      status: "1",
-    });
+    history.push("/admin/post/list");
   };
+
+  if (!post) {
+    return (
+      <>
+        <div>Loading...</div>
+      </>
+    );
+  }
 
   return (
     <>
       <div>
         <form className="d-flex flex-column" onSubmit={(e) => onCreatePost(e)}>
           <div className="d-flex mb-4 ">
-            <h3 className="flex-grow-1 m-0">Add new post</h3>
-            <button className="btn btn-primary" type="submit">
-              Create Post
+            <h3 className="flex-grow-1 m-0">Edit post</h3>
+            <button className="btn btn-primary me-3" type="submit">
+              Update Post
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={(e) => {
+                history.push("/admin/post/list");
+              }}
+            >
+              Cancel
             </button>
           </div>
           <div className="my-2">
@@ -53,6 +87,7 @@ const AddPost = ({ socket }) => {
               className="form-control"
               rows="4"
               onChange={(e) => onChangeValue(e)}
+              required
               autoComplete="off"
             />
           </div>
@@ -103,12 +138,15 @@ const AddPost = ({ socket }) => {
   );
 };
 
-AddPost.propTypes = {
+EditPost.propTypes = {
   socket: PropTypes.object.isRequired,
+  post: PropTypes.object.isRequired,
+  getAllTypePost: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   socket: state.socket.socket,
+  post: state.post.post,
 });
 
-export default connect(mapStateToProps, {})(AddPost);
+export default connect(mapStateToProps, { getAllTypePost })(EditPost);

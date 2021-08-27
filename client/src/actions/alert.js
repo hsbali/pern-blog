@@ -1,4 +1,3 @@
-import axios from "axios";
 import store from "./../store";
 
 import * as t from "./types";
