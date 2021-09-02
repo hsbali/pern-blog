@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-import getCookieValue from "../utils/getCookieValue";
-
 import { logout } from "../actions/auth";
 
 const AuthLink = ({ logout }) => {
@@ -13,6 +11,16 @@ const AuthLink = ({ logout }) => {
       className="navbar-nav my-2"
       style={{ marginLeft: "auto", gap: "0.5em" }}
     >
+      <li className="nav-item pointer">
+        <Link className="nav-link" to="/">
+          Home
+        </Link>
+      </li>
+      <li className="nav-item pointer">
+        <Link className="nav-link" to="/favourites">
+          Favourites
+        </Link>
+      </li>
       <li className="nav-item">
         <button
           className="btn btn-dark"
@@ -34,6 +42,11 @@ const GuestLink = () => {
       className="navbar-nav my-2"
       style={{ marginLeft: "auto", gap: "0.5em" }}
     >
+      <li className="nav-item pointer">
+        <Link className="nav-link" to="/">
+          Home
+        </Link>
+      </li>
       <li className="nav-item">
         <Link to="/login">
           <button className="btn btn-dark">Log in</button>

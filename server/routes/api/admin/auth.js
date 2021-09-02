@@ -120,7 +120,7 @@ router.get("/logout", auth, async (req, res) => {
 // @route       POST /admin/auth
 // @desc        Get User by access_token
 // @access      Private
-router.get("/", auth, async (req, res) => {
+router.get("/", auth(1), async (req, res) => {
   try {
     const getUser = await pool.query(
       "SELECT user_id, email, username, user_type FROM tbl_user WHERE user_id = $1 AND user_type = '1'",

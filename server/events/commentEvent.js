@@ -22,7 +22,7 @@ const commentEvents = (io, socket) => {
       const commentId = newComment.rows[0].comment_id;
 
       const getComment = await pool.query(
-        "SELECT c.comment_id, c.content, c.url, c.create_time, c.is_approved, u.user_id, u.username, u.email, u.user_type, p.title FROM tbl_comment c JOIN tbl_user u ON c.user_id = u.user_id JOIN tbl_post p ON c.post_id = p.post_id WHERE c.comment_id = $1",
+        "SELECT c.comment_id, c.content, c.url, c.create_time, c.is_approved, u.user_id, u.username, u.email, u.user_type, p.title, p.post_id FROM tbl_comment c JOIN tbl_user u ON c.user_id = u.user_id JOIN tbl_post p ON c.post_id = p.post_id WHERE c.comment_id = $1",
         [commentId]
       );
       const comment = getComment.rows[0];

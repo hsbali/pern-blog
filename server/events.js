@@ -27,14 +27,13 @@ const events = (io) => {
     socket.on("admin-logout", () => {
       socket.leave("admins");
       socket.join("guests");
-      console.log("guest to admin");
+      console.log("admin to guest");
     });
 
     socket.on("refresh-fail", () => {
       socket.leave("admins");
       socket.leave("users");
       socket.join("guests");
-      socket.leave();
     });
 
     postEvents(io, socket);

@@ -23,6 +23,13 @@ const postEvents = (io, socket) => {
         });
       }
 
+      if (data.post.status === "2" && data.post.content === "") {
+        return socket.emit("set-alert", {
+          msg: "Content is required for Published posts",
+          type: "danger",
+        });
+      }
+
       const setNewPost = await pool.query(
         "INSERT INTO tbl_post (title, content, tags, status, create_time, update_time, author_id) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $5) RETURNING *",
         [
@@ -71,6 +78,13 @@ const postEvents = (io, socket) => {
       if (["1", "2", "3"].indexOf(data.post.status) === -1) {
         return socket.emit("set-alert", {
           msg: "Enter valid status",
+          type: "danger",
+        });
+      }
+
+      if (data.post.status === "2" && data.post.content === "") {
+        return socket.emit("set-alert", {
+          msg: "Content is required for Published posts",
           type: "danger",
         });
       }
@@ -136,6 +150,32 @@ const postEvents = (io, socket) => {
         type: "danger",
       });
     }
+  });
+
+  socket.on("update-fav-list", async (data) => {
+    const isAuth = socketAuth(socket, data.token, ["2"]);
+    if (!isAuth.result) {
+      return socket.emit("set-alert", isAuth.data);
+    }
+
+    if (data.result.old < data.result.new) {
+      const updatePosts = await pool.query(
+        "UPDATE tbl_fav SET position = (CASE WHEN position = $1 THEN $2 WHEN position < $2 + 1 AND NOT (position < $1) THEN position - 1 ELSE position END) WHERE user_id = $3",
+        [data.result.old, data.result.new, isAuth.data.id]
+      );
+    } else if (data.result.old > data.result.new) {
+      const updatePosts = await pool.query(
+        "UPDATE tbl_fav SET position = (CASE WHEN position = $1 THEN $2 WHEN position < $2 - 1 AND NOT (position > $1) THEN position + 1 ELSE position END) WHERE user_id = $3",
+        [data.result.old, data.result.new, isAuth.data.id]
+      );
+    }
+
+    // socket.to("users").emit("on-update-fav-list", {
+    //   userId: isAuth.data.id,
+    //   result: data.result,
+    // });
+
+    // return socket.emit("set-alert", { msg: "List Updated", type: "success" });
   });
 };
 

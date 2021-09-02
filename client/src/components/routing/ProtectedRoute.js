@@ -3,8 +3,6 @@ import { Route, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import getCookieValue from "../../utils/getCookieValue";
-
 const PrivateRoute = ({
   component: Component,
   isAuthenticated,
@@ -15,11 +13,7 @@ const PrivateRoute = ({
     <Route
       {...rest}
       render={(props) =>
-        getCookieValue("___authenticated") !== "true" ? (
-          <Redirect to="/login" />
-        ) : (
-          <Component {...props} />
-        )
+        !isAuthenticated ? <Redirect to="/login" /> : <Component {...props} />
       }
     />
   );

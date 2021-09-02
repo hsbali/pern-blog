@@ -7,7 +7,7 @@ export const setAlert = (msg, type) => async (dispatch) => {
   try {
     const id = store.getState().alert.length;
 
-    return dispatch({
+    dispatch({
       type: t.SET_ALERT,
       payload: {
         id,
@@ -15,24 +15,13 @@ export const setAlert = (msg, type) => async (dispatch) => {
         type,
       },
     });
-  } catch (err) {
-    console.log(err.message);
-    return dispatch({
-      type: t.ALERT_ERROR,
-    });
-  }
-};
 
-// Remove alert
-export const removeAlert = (id) => async (dispatch) => {
-  try {
-    console.log("in action");
-    return dispatch({
-      type: t.REMOVE_ALERT,
-      payload: {
-        id,
-      },
-    });
+    setTimeout(() => {
+      dispatch({
+        type: t.REMOVE_ALERT,
+        payload: { id },
+      });
+    }, 3000);
   } catch (err) {
     console.log(err.message);
     return dispatch({

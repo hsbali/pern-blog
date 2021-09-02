@@ -95,6 +95,36 @@ export const getAllComments = (offset, limit) => async (dispatch) => {
   }
 };
 
+// Get All comments on post
+export const getPostComments = (postId, offset, limit) => async (dispatch) => {
+  try {
+    dispatch({
+      type: t.FETCH_COMMENTS_REQUEST,
+    });
+    const res = await axios.get(
+      `http://localhost:5500/api/v1/admin/comments/posts/${postId}?offset=${offset}&limit=${limit}`
+    );
+
+    if (offset !== 0) {
+      dispatch({
+        type: t.ADD_NEXT_COMMENTS,
+        payload: res.data.data,
+      });
+    } else {
+      dispatch({
+        type: t.FETCH_COMMENTS_SUCCESS,
+        payload: res.data.data,
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    return dispatch({
+      type: t.FETCH_COMMENTS_FAIL,
+      payload: { msg: "Can't load comments" },
+    });
+  }
+};
+
 // add post to list
 export const updateCommentList = (comment) => async (dispatch) => {
   try {

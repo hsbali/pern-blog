@@ -32,6 +32,7 @@ const PostListTable = ({ socket, posts, getAllPosts }) => {
                 <th scope="col">Title</th>
                 <th scope="col">Status</th>
                 <th scope="col">Author</th>
+                <th scope="col">Comments</th>
                 <th scope="col">Actions</th>
               </tr>
             </thead>
@@ -56,11 +57,21 @@ const PostListTable = ({ socket, posts, getAllPosts }) => {
                           <td>{post.username}</td>
                           <td>
                             <div className="d-flex">
+                              {post.comment_count}
+                              <Link
+                                to={"/admin/comment/list/post/" + post.post_id}
+                              >
+                                <i className="bi bi-eye ms-3 pointer"></i>
+                              </Link>
+                            </div>
+                          </td>
+                          <td>
+                            <div className="d-flex">
                               <Link to={"/admin/post/edit/" + post.post_id}>
-                                <i class="bi bi-pencil-square me-3 pointer"></i>
+                                <i className="bi bi-pencil-square me-3 pointer"></i>
                               </Link>
                               <i
-                                class="bi bi-trash pointer"
+                                className="bi bi-trash pointer"
                                 onClick={() => onDelete(post)}
                               ></i>
                             </div>

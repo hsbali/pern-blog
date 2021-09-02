@@ -80,6 +80,17 @@ export default function auth(state = initialState, action) {
         ...state,
         posts: state.posts.filter((el) => el.post_id !== payload.post_id),
       };
+
+    case t.ON_NEW_COMMENT_COUNT:
+      return {
+        ...state,
+        posts: state.posts.map((x) => {
+          if (x.post_id === payload.postId) {
+            x.comment_count = Number(x.comment_count) + 1;
+            return x;
+          } else return x;
+        }),
+      };
     default:
       return state;
   }

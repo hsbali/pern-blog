@@ -2,9 +2,7 @@ import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { removeAlert } from "../actions/alert";
-
-const Alert = ({ alerts, removeAlert }) => {
+const Alert = ({ alerts }) => {
   if (alerts.length === 0) {
     return null;
   }
@@ -19,11 +17,6 @@ const Alert = ({ alerts, removeAlert }) => {
               role="alert"
             >
               <p className="m-0">{alert.msg}</p>
-              <button
-                type="button"
-                className="btn-close"
-                onClick={(e) => removeAlert(alert.id)}
-              ></button>
             </div>
           </Fragment>
         );
@@ -34,11 +27,10 @@ const Alert = ({ alerts, removeAlert }) => {
 
 Alert.propTypes = {
   alerts: PropTypes.array.isRequired,
-  removeAlert: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   alerts: state.alert,
 });
 
-export default connect(mapStateToProps, { removeAlert })(Alert);
+export default connect(mapStateToProps, {})(Alert);

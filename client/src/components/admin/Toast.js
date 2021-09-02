@@ -33,7 +33,7 @@ const Toast = ({ toasts, removeToast }) => {
                         onClick={() => removeToast(toast.id)}
                       ></button>
                     </div>
-                    <div className="toast-body">
+                    <div className="toast-body" style={{ background: "white" }}>
                       <p className="m-0">{toast.subTitle}</p>
                       <p className="m-0">{toast.body}</p>
                     </div>

@@ -4,7 +4,12 @@ import PropTypes from "prop-types";
 
 import { Link } from "react-router-dom";
 
-import { getPublishedPosts } from "../actions/post";
+import {
+  getPublishedPosts,
+  getPublishedWithFavPosts,
+  addFavourite,
+  removeFavourite,
+} from "../actions/post";
 
 const ShowDate = ({ create, update }) => {
   const [date, setDate] = useState(null);
@@ -21,10 +26,33 @@ const ShowDate = ({ create, update }) => {
   return <>{date}</>;
 };
 
-const PostList = ({ posts, getPublishedPosts }) => {
+const PostList = ({
+  posts,
+  getPublishedPosts,
+  auth,
+  isAuthenticated,
+  getPublishedWithFavPosts,
+  addFavourite,
+  removeFavourite,
+}) => {
   useEffect(() => {
-    getPublishedPosts(0, 3);
-  }, []);
+    if (isAuthenticated && auth.user !== null) {
+      getPublishedWithFavPosts(auth.user.user_id, 0, 3);
+    } else {
+      getPublishedPosts(0, 3);
+    }
+  }, [auth.user]);
+
+  const onToggleFav = (post) => {
+    console.log("clicking");
+    if (post.fav_id === null) {
+      addFavourite(post.post_id);
+    } else {
+      console.log(post.post_id, post.fav_id);
+      removeFavourite(post.post_id, post.fav_id);
+    }
+  };
+
   return (
     <>
       <div className="container">
@@ -35,17 +63,44 @@ const PostList = ({ posts, getPublishedPosts }) => {
                 {posts.map((post, i) => {
                   return (
                     <Fragment key={i}>
-                      <Link
-                        to={"/post/" + post.post_id}
-                        style={{ textDecoration: "none", color: "black" }}
-                      >
+                      <div>
                         <div
-                          className="pointer px-5 py-3"
+                          className="px-5 py-3"
                           style={{
                             borderBottom: "1px solid grey",
                           }}
                         >
-                          <h1>{post.title}</h1>
+                          <div className="d-flex align-items-center">
+                            <h1 className="flex-grow-1">
+                              <Link
+                                to={"/post/" + post.post_id}
+                                style={{
+                                  textDecoration: "none",
+                                  color: "black",
+                                }}
+                              >
+                                {post.title}
+                              </Link>
+                            </h1>
+                            {post.fav_id !== undefined ? (
+                              <>
+                                <div
+                                  className="d-flex align-items-center pointer"
+                                  onClick={() => onToggleFav(post)}
+                                >
+                                  <div className="me-3">Favourites</div>
+                                  <input
+                                    type="checkbox"
+                                    className="pointer"
+                                    checked={!!post.fav_id}
+                                    readOnly
+                                  ></input>
+                                </div>
+                              </>
+                            ) : (
+                              ""
+                            )}
+                          </div>
                           <div className="d-flex align-items-center">
                             <h5 className="flex-grow-1 m-0">{post.username}</h5>
                             <h6 className="m-0">
@@ -56,14 +111,22 @@ const PostList = ({ posts, getPublishedPosts }) => {
                             </h6>
                           </div>
                         </div>
-                      </Link>
+                      </div>
                     </Fragment>
                   );
                 })}
                 <div className="text-center">
                   <button
                     className="btn btn-primary"
-                    onClick={(e) => getPublishedPosts(posts.length, 3)}
+                    onClick={(e) =>
+                      auth.isAuthenticated && auth.user !== null
+                        ? getPublishedWithFavPosts(
+                            auth.user.user_id,
+                            posts.length,
+                            3
+                          )
+                        : getPublishedPosts(posts.length, 3)
+                    }
                   >
                     Load more
                   </button>
@@ -86,10 +149,22 @@ const PostList = ({ posts, getPublishedPosts }) => {
 PostList.propTypes = {
   posts: PropTypes.array.isRequired,
   getPublishedPosts: PropTypes.func.isRequired,
+  getPublishedWithFavPosts: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+  addFavourite: PropTypes.func.isRequired,
+  removeFavourite: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   posts: state.post.posts,
+  auth: state.auth,
+  isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { getPublishedPosts })(PostList);
+export default connect(mapStateToProps, {
+  getPublishedPosts,
+  getPublishedWithFavPosts,
+  addFavourite,
+  removeFavourite,
+})(PostList);

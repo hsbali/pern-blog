@@ -1,3 +1,13 @@
 .pointer {
   cursor: pointer;
 }
+
+.post-card {
+  color: black;
+  text-decoration: none;
+  background-color: white;
+  border-bottom: 1px solid black;
+  &:hover {
+    color: black;
+  }
+}

@@ -113,7 +113,7 @@ router.get("/refresh", (req, res) => {
 // @route       POST /auth/logout
 // @desc        Logout user
 // @access      Private
-router.get("/logout", auth, async (req, res) => {
+router.get("/logout", async (req, res) => {
   try {
     return res
       .cookie("___authenticated", false, {
@@ -144,7 +144,7 @@ router.get("/logout", auth, async (req, res) => {
 // @route       POST /auth
 // @desc        Get User by access_token
 // @access      Private
-router.get("/", auth, async (req, res) => {
+router.get("/", auth(2), async (req, res) => {
   try {
     const getUser = await pool.query(
       "SELECT user_id, email, username, user_type FROM tbl_user WHERE user_id = $1",

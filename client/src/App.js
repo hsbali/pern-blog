@@ -13,6 +13,8 @@ import axios from "axios";
 import Home from "./pages/Home";
 import Login from "./components/Login";
 import Signin from "./components/Signin";
+import Favourites2 from "./pages/Favourites2";
+import Favourites from "./pages/Favourites";
 import Post from "./pages/Post";
 
 import AdminDash from "./pages/admin/AdminDash";
@@ -21,6 +23,7 @@ import AddPost from "./components/admin/AddPost";
 import EditPost from "./components/admin/EditPost";
 import PostListTable from "./components/admin/PostListTable";
 import CommentListTable from "./components/admin/CommentListTable";
+import SelectedCommentList from "./components/admin/SelectedCommentList";
 
 import { refreshAuth } from "./actions/auth";
 import { refreshAdminAuth } from "./actions/adminAuth";
@@ -75,6 +78,10 @@ const App = ({
 
         <Route exact path="/admin/login" component={AdminLogin} />
 
+        <ProtectedRoute exact path="/favourites2" component={Favourites2} />
+
+        <ProtectedRoute exact path="/favourites" component={Favourites} />
+
         <AdminProtectedRoute exact path="/admin" component={AdminDash} />
         <AdminProtectedRoute exact path="/admin/post/add" component={AddPost} />
         <AdminProtectedRoute
@@ -91,6 +98,11 @@ const App = ({
           exact
           path="/admin/comment/list"
           component={CommentListTable}
+        />
+        <AdminProtectedRoute
+          exact
+          path="/admin/comment/list/post/:postId"
+          component={SelectedCommentList}
         />
       </Switch>
     </Router>
